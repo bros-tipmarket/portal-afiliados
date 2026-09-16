@@ -13,7 +13,7 @@ export const DEMO_EMAIL='afiliado@demo.tipmarket';
 export const DEMO_PASSWORD='parceria2026';
 export const DEMO_CODE='123456';
 
-export default function Login({onSuccess}:{onSuccess:()=>void}){
+export default function Login({onSuccess,onInvite}:{onSuccess:()=>void;onInvite:()=>void}){
  const [step,setStep]=useState(0);const [email,setEmail]=useState('');const [password,setPassword]=useState('');const [otp,setOtp]=useState('');
  function submitCredentials(e:React.FormEvent){e.preventDefault();
   if(email.trim().toLowerCase()!==DEMO_EMAIL||password!==DEMO_PASSWORD){toast.error('E-mail ou senha não conferem. Use as credenciais de demonstração indicadas na tela.');return;}
@@ -45,6 +45,7 @@ export default function Login({onSuccess}:{onSuccess:()=>void}){
       <button className="btn full" type="button" onClick={()=>{setOtp('');setStep(0);}}>Voltar</button>
      </form>}
   </section>
-  <p className="onboarding-note">Primeiro acesso ao programa? Ele começa pelo convite enviado por e-mail no seu cadastro. Simulação da experiência: o acesso real dependerá do convite, do Kratos e dos termos oficiais.</p>
+  <div className="invite-entry"><div><strong>Primeiro acesso ao programa?</strong><p>Ele começa pelo convite enviado por e-mail no seu cadastro.</p></div><button className="btn" type="button" onClick={onInvite}>Usar meu convite<ArrowRight size={16}/></button></div>
+  <p className="onboarding-note">Simulação da experiência: o acesso real dependerá do convite, do Kratos e dos termos oficiais.</p>
  </main></div>;
 }

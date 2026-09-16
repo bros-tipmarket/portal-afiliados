@@ -8,3 +8,16 @@ export async function copy(text:string){try{await navigator.clipboard.writeText(
 export function Help({text}:{text:string}){return <Tooltip><TooltipTrigger asChild><button type="button" className="help-icon" aria-label={text}><Info size={14}/></button></TooltipTrigger><TooltipContent className="max-w-72">{text}</TooltipContent></Tooltip>;}
 export function readLocal<T>(key:string,fallback:T):T{try{const value=localStorage.getItem('tm-demo:'+key);return value?JSON.parse(value):fallback;}catch{return fallback;}}
 export function saveLocal(key:string,value:unknown){try{localStorage.setItem('tm-demo:'+key,JSON.stringify(value));return true;}catch{toast.error('Não foi possível salvar neste navegador. Libere espaço e tente novamente.');return false;}}
+
+// Lê o token do convite tanto da query quanto do hash. O link enviado por e-mail
+// usa ?convite=<token>; colado depois de um hash de navegação, o parâmetro acaba
+// atrás do # e `location.search` fica vazio.
+export function readInvite():string|null{
+ try{
+  const search=new URLSearchParams(window.location.search);
+  const hash=window.location.hash.slice(1);
+  const afterQuestion=hash.includes('?')?hash.slice(hash.indexOf('?')+1):hash;
+  const fromHash=new URLSearchParams(afterQuestion);
+  return search.get('convite')||search.get('invite')||fromHash.get('convite')||fromHash.get('invite');
+ }catch{return null;}
+}
