@@ -15,16 +15,17 @@ const out = path.join(root, "dist-static");
 const stage = path.join(root, ".pages-worktree");
 
 function run(cmd, args, options = {}) {
-  // `shell` só para o npx do Windows: com shell ligado os argumentos não são
-  // escapados, e o caminho do projeto contém espaços.
-  const shell = process.platform === "win32" && cmd === "npx";
-  const result = spawnSync(cmd, args, { cwd: root, stdio: "inherit", shell, ...options });
+  // Sem `shell`: com ele os argumentos não são escapados, e o caminho do
+  // projeto contém espaços.
+  const result = spawnSync(cmd, args, { cwd: root, stdio: "inherit", ...options });
   if (result.status !== 0) {
     throw new Error(`Falhou: ${cmd} ${args.join(" ")}`);
   }
 }
 
-run("npx", ["vite", "build", "--config", "vite.static.config.ts"], {
+// Chama o Vite pelo entrypoint JS: no Windows o `npx` é um .cmd, que o Node
+// só executa com shell — e shell não escapa o caminho com espaços.
+run(process.execPath, [path.join(root, "node_modules/vite/bin/vite.js"), "build", "--config", "vite.static.config.ts"], {
   env: { ...process.env, PORTAL_BASE: base },
 });
 
