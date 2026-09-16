@@ -1,0 +1,13 @@
+import {sum,query} from './affiliate';
+export type Settlement={id:string;period:string;from:string;to:string;status:'OPEN'|'AWAITING'|'CLOSED'|'PAID'|'PARTIAL';ngr:number;revshare:number;qualified:number;cpa:number;carryIn:number;adjustment:number;due:number;carryOut:number;payments:{amount:number;date:string;method:string;reference:string}[]};
+export const statusLabels={OPEN:'Aberto · Prévia',AWAITING:'Aguardando fechamento',CLOSED:'Fechado',PAID:'Pago',PARTIAL:'Pago parcial'};
+export const statusClasses={OPEN:'neutral',AWAITING:'yellow',CLOSED:'blue',PAID:'green',PARTIAL:'lightgreen'};
+const sep=sum(query('2026-09-01','2026-09-11'));const aug=sum(query('2026-08-01','2026-08-31'));
+export const settlements:Settlement[]=[
+{id:'s_09',period:'Setembro 2026',from:'2026-09-01',to:'2026-09-30',status:'OPEN',ngr:sep.ngr,revshare:Math.round(sep.ngr*.3),qualified:sep.qualified,cpa:sep.qualified*1000,carryIn:0,adjustment:0,due:sep.commission,carryOut:0,payments:[]},
+{id:'s_08',period:'Agosto 2026',from:'2026-08-01',to:'2026-08-31',status:'AWAITING',ngr:aug.ngr,revshare:Math.round(aug.ngr*.3),qualified:aug.qualified,cpa:aug.qualified*1000,carryIn:0,adjustment:0,due:aug.commission,carryOut:0,payments:[]},
+{id:'s_07',period:'Julho 2026',from:'2026-07-01',to:'2026-07-31',status:'PAID',ngr:534100,revshare:160230,qualified:57,cpa:57000,carryIn:0,adjustment:1200,due:218430,carryOut:0,payments:[{amount:218430,date:'2026-08-05',method:'USDC · Polygon',reference:'DEMO-0x9f3a78b541c6e910f2b8c7d604a25e13'}]},
+{id:'s_06',period:'Junho 2026',from:'2026-06-01',to:'2026-06-30',status:'PARTIAL',ngr:458000,revshare:137400,qualified:40,cpa:40000,carryIn:-11800,adjustment:0,due:165600,carryOut:0,payments:[{amount:100000,date:'2026-07-05',method:'USDC · Polygon',reference:'DEMO-0xa81c6729f31b509e46d80a2c75e01933'}]},
+{id:'s_05',period:'Maio 2026',from:'2026-05-01',to:'2026-05-31',status:'CLOSED',ngr:-56000,revshare:-16800,qualified:5,cpa:5000,carryIn:0,adjustment:0,due:0,carryOut:-11800,payments:[]}
+];
+export function statementRows(s:Settlement){return [['Período',s.period],['Estado',statusLabels[s.status]],['Moeda','USD'],['NGR base',s.ngr/100],['Revenue share (30%)',s.revshare/100],['CPAs (quantidade)',s.qualified],['CPAs (valor)',s.cpa/100],['Carryover de entrada',s.carryIn/100],['Ajuste comercial',s.adjustment/100],[s.status==='OPEN'||s.status==='AWAITING'?'Comissão estimada (prévia)':'Comissão devida',s.due/100],['Carryover de saída',s.carryOut/100],...s.payments.flatMap(p=>[['Valor pago',p.amount/100],['Data de pagamento',p.date],['Método',p.method],['Referência',p.reference]])];}
