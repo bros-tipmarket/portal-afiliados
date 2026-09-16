@@ -27,6 +27,22 @@ Requer Node.js 22.13 ou superior. Dependências já instaladas neste computador.
 - Menu “Ambiente local · Demonstração”: estados ACTIVE/PENDING/SUSPENDED/TERMINATED, programa inativo, sem atividade, falha e fluxo de primeiro acesso. Estado suspenso/inativo bloqueia as escritas do portal.
 - Interface responsiva, controles acessíveis por teclado, feedback de ações e estados vazios.
 
+## Publicação
+
+O portal está publicado em <https://bros-tipmarket.github.io/portal-afiliados/>, para a equipe navegar sem instalar nada. É o mesmo ambiente demonstrativo: dados fixos, `localStorage` e nenhuma integração real. O link é público na internet — não inserir credenciais nem dados reais.
+
+Para atualizar depois de mudar o código:
+
+```sh
+npm run publish:pages
+```
+
+O script gera o build estático (`vite.static.config.ts` → `dist-static/`) e envia para a branch `gh-pages`, que o GitHub Pages serve. A atualização leva cerca de um minuto. É preciso estar autenticado como `bros-tipmarket` (`gh auth switch --user bros-tipmarket`), dona do repositório.
+
+O caminho base é `/portal-afiliados/`, e não a raiz do domínio. Por isso arquivos de `public/` são referenciados por `asset()` em `lib/utils.ts`; caminhos absolutos como `/brand/logo-white.svg` quebrariam na publicação. Para publicar em outro caminho, defina `PORTAL_BASE`.
+
+O build local (`npm run dev` e `npm run build`, vinext sobre Cloudflare) segue inalterado e é o ambiente de desenvolvimento.
+
 ## Persistência e integração real
 
 Este é um ambiente funcional de demonstração, **não uma implantação de produção**. Campanhas, links recentes, preferências e aceite demonstrativo usam `localStorage` com prefixo `tm-demo:`. Não se devem inserir credenciais ou dados sensíveis reais.
