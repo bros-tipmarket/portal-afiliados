@@ -23,7 +23,8 @@ Requer Node.js 22.13 ou superior. Dependências já instaladas neste computador.
 - Campanhas: criar, renomear e confirmar desativação; unicidade sem distinguir maiúsculas; histórico preservado e inativas excluídas do gerador.
 - Extratos: cinco estados, detalhamento de NGR, revshare, CPA, carryover, ajustes, pagamentos e referência copiável; CSV e PDFs efetivos; cenário negativo explicado.
 - Perfil: contato, idioma de preferência e notificações persistidos localmente; identidade, deal e pagamento mascarado somente leitura. A interface permanece em português nesta versão.
-- Primeiro acesso demonstrativo: senha de teste (não armazenada), QR ilustrativo, código 123456, backup, termos demo-1.0 e registro de versão/data. Sessão inicial é um afiliado de demonstração já autenticado.
+- Login obrigatório (PRD, Feature 1): e-mail e senha, depois o código de duas etapas. Nenhuma tela do portal abre antes da verificação. Credenciais da demonstração, exibidas na própria tela: `afiliado@demo.tipmarket` · `parceria2026` · código `123456`. A sessão fica em `localStorage` e o botão de sair, no topo, encerra.
+- Primeiro acesso demonstrativo: entra pelo link de convite `?convite=<token>`, como o e-mail gerado no cadastro pelo backoffice. Senha de teste (não armazenada), QR ilustrativo, código 123456, backup, termos demo-1.0 e registro de versão/data; ao concluir, a sessão é aberta e o parâmetro sai da URL.
 - Menu “Ambiente local · Demonstração”: estados ACTIVE/PENDING/SUSPENDED/TERMINATED, programa inativo, sem atividade, falha e fluxo de primeiro acesso. Estado suspenso/inativo bloqueia as escritas do portal.
 - Interface responsiva, controles acessíveis por teclado, feedback de ações e estados vazios.
 
@@ -51,7 +52,7 @@ Dados financeiros e métricas são fixtures em `lib/affiliate.ts` e `lib/settlem
 
 Pontos pendentes antes da operação real:
 
-1. Kratos no realm affiliates, convite, senha, TOTP AAL2, sessão/cookies em domínio separado e Keto. O código 123456 e o QR atual apenas simulam a interface; não protegem acesso real.
+1. Kratos no realm affiliates, convite, senha, TOTP AAL2, sessão/cookies em domínio separado e Keto. A tela de login, o código 123456 e o QR atual apenas simulam a interface; não protegem acesso real — as credenciais ficam visíveis no código do cliente. O token do convite não é validado contra nada.
 2. Conectar GET/PUT `/affiliate/me`, campanhas, métricas, destinos e extratos aos endpoints existentes. Derivar o afiliado **no servidor**, exclusivamente da identidade autenticada; nunca aceitar affiliate_id do cliente.
 3. Negar token affiliates em player/trading. Os testes de autorização, isolamento e paridade com backoffice dependem dos serviços ausentes, não são substituídos por controles da interface.
 4. Conectar os estados e pagamentos às consultas compartilhadas do Admin; nenhuma escrita financeira é exposta neste portal.
