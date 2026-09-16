@@ -15,7 +15,10 @@ const out = path.join(root, "dist-static");
 const stage = path.join(root, ".pages-worktree");
 
 function run(cmd, args, options = {}) {
-  const result = spawnSync(cmd, args, { cwd: root, stdio: "inherit", shell: process.platform === "win32", ...options });
+  // `shell` só para o npx do Windows: com shell ligado os argumentos não são
+  // escapados, e o caminho do projeto contém espaços.
+  const shell = process.platform === "win32" && cmd === "npx";
+  const result = spawnSync(cmd, args, { cwd: root, stdio: "inherit", shell, ...options });
   if (result.status !== 0) {
     throw new Error(`Falhou: ${cmd} ${args.join(" ")}`);
   }
@@ -34,8 +37,8 @@ run("git", ["worktree", "prune"]);
 const branches = spawnSync("git", ["ls-remote", "--heads", "origin", "gh-pages"], { cwd: root, encoding: "utf8" });
 const exists = Boolean(branches.stdout?.trim());
 run("git", exists
-  ? ["worktree", "add", stage, "-B", "gh-pages", "origin/gh-pages"]
-  : ["worktree", "add", stage, "--orphan", "-b", "gh-pages"]);
+  ? ["worktree", "add", "-B", "gh-pages", stage, "origin/gh-pages"]
+  : ["worktree", "add", "--orphan", "-b", "gh-pages", stage]);
 
 for (const entry of readdirSync(stage)) {
   if (entry !== ".git") rmSync(path.join(stage, entry), { recursive: true, force: true });
