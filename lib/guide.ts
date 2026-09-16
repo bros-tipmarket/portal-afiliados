@@ -32,7 +32,7 @@ export const guide: GuideStep[] = [
     title: 'Guia de revisão do portal',
     body: 'Este guia é para a equipe, não para o afiliado. Em cada tela ele aponta o que o PRD 17 pede, o que esta implementação entrega e o que ainda depende de serviços que não existem. Os três princípios do PRD valem em tudo que vem a seguir:',
     bullets: [
-      'Mesma definição, mesmo número. Cada métrica usa a definição do PRD Admin (Feature 4) e a mesma consulta. Não existe "versão do afiliado" de nenhuma métrica.',
+      'Mesma definição, mesmo número. Cada métrica usa a definição do PRD Admin (Feature 4) e a mesma consulta.',
       'Prévia não é dívida. Período aberto mostra estimativa; só o fechado é obrigação e só o pago é pago.',
       'Identidade separada. O afiliado vive em realm próprio no Kratos, com 2FA obrigatório. Não tem carteira, não negocia, não é player.',
     ],
